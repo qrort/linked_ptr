@@ -60,9 +60,9 @@ namespace smart_ptr{
         using element_type = T;
 
         template <typename U>
-        friend void swap(linked_ptr<U>& a, linked_ptr<U>& b);
+        friend void swap(linked_ptr<U>& a, linked_ptr<U>& b) noexcept;
 
-        void swap(linked_ptr<T>& other) {
+        void swap(linked_ptr<T>& other) noexcept {
             if (l) {
                 l->r = &other;
             }
@@ -91,6 +91,9 @@ namespace smart_ptr{
         template <typename U, typename = _Convertible<U>>
         linked_ptr(const linked_ptr<U>& other) noexcept : ptr(other.get()) {
             insert(const_cast<linked_ptr<U>*>(&other));
+        }
+        linked_ptr(linked_ptr<T>&& other) noexcept {
+            this->swap(other);
         }
 
         ~linked_ptr() {
@@ -149,7 +152,7 @@ namespace smart_ptr{
     };
 
     template <typename U>
-    void swap(linked_ptr<U>& a, linked_ptr<U>& b) {
+    void swap(linked_ptr<U>& a, linked_ptr<U>& b) noexcept {
         a.swap(b);
     }
 
